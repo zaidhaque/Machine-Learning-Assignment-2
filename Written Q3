@@ -1,0 +1,55 @@
+import numpy as np
+import math
+
+m1=[[int(1),int(2),int(3)],[int(3),int(4),int(5)],[int(5),int(4),int(3)],[int(0),int(2),int(4)],[int(1),int(3),int(5)]]
+
+m=np.matrix(m1)
+print("m=")
+print(m)
+
+mt=np.matrix.transpose(m)
+print("mt=")
+print(mt)
+
+#------a-------
+print("----a----")
+
+mtm=mt*m
+print("mt*m=")
+print(mtm)
+
+mmt=m*mt
+print("m*mt=")
+print(mmt)
+
+
+
+#------b&c------
+print("---- b&c mtm ----")
+print(np.linalg.eig(mtm))
+print("---- b&c mmt -----")
+print(np.linalg.eig(mmt))
+
+#-----d--------
+print("---- d sqrt----")
+print("D=",math.sqrt(1.53566996e+02),math.sqrt(1.54330035e+01))
+
+#-----e------
+d=12.392215136931734
+print("d=",d)
+v=np.matrix([-0.40928285,-0.81597848,0.40824829])
+print("v=",v)
+u=np.matrix([0.29769568,0.94131607,-0.15906393,-0.57735012,-0.21094872])
+print("u=",u)
+vt=np.matrix.transpose(v)
+print("vt=",vt)
+uvt=np.outer(u,v)
+print("uvt=",uvt)
+duvt=np.outer(u,v)*d
+print("outer=",duvt)
+
+#----f------
+d1=math.sqrt(1.53566996e+02)
+d2=math.sqrt(1.54330035e+01)
+r=math.pow((d1),2)/(math.pow((d1),2)+math.pow((d2),2))
+print(r)
