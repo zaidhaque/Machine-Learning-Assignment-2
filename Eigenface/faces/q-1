@@ -1,0 +1,69 @@
+import numpy as np
+from scipy import misc
+from matplotlib import pylab as plt
+import matplotlib.cm as cm
+
+
+#------- a & b --------
+
+train_labels, train_data = [], []
+for line in open("/Users/Jessie/Documents/Applied Machine Learning/hw2/faces/train.txt"):
+    im = misc.imread(line.strip().split()[0])
+    train_data.append(im.reshape(2500,))
+    train_labels.append(line.strip().split()[1])
+train_data, train_labels = np.array(train_data, dtype=float), np.array(train_labels, dtype=int)
+print("train data shape=",train_data.shape,"train label shape=", train_labels.shape)
+# plt.imshow(train_data[10, :].reshape(50,50), cmap = cm.Greys_r)
+# plt.show()
+
+
+test_labels, test_data = [], []
+for line in open("/Users/Jessie/Documents/Applied Machine Learning/hw2/faces/test.txt"):
+    im = misc.imread(line.strip().split()[0])
+    test_data.append(im.reshape(2500,))
+    test_labels.append(line.strip().split()[1])
+test_data, test_labels = np.array(test_data, dtype=float), np.array(test_labels, dtype=int)
+print("test data shape=",test_data.shape, "test label shape=",test_labels.shape)
+# plt.imshow(test_data[10, :].reshape(50,50), cmap = cm.Greys_r)
+# plt.show()
+
+
+
+#------- c --------
+train_mean=[]
+train_mean=np.mean(train_data,axis=0)
+# print(train_mean.shape)
+plt.imshow(train_mean.reshape(50,50), cmap = cm.Greys_r)
+# plt.show()
+
+# ------ d --------
+mean_sub_train=[]
+for i in range(540):
+    mean_sub_train.append(train_data[i,:]-train_mean)
+mean_subtraction_train=[]
+mean_subtraction_train=np.array(mean_sub_train, dtype=float)
+# print(mean_subtraction_train.shape)
+plt.imshow(mean_subtraction_train[10,:].reshape(50,50), cmap = cm.Greys_r)
+# plt.show()
+
+
+mean_sub_test=[]
+for i in range(100):
+    mean_sub_test.append(test_data[i,:]-train_mean)
+mean_subtraction_test=[]
+mean_subtraction_test=np.array(mean_sub_test, dtype=float)
+# print(mean_subtraction_test.shape)
+plt.imshow(mean_subtraction_test[10,:].reshape(50,50), cmap = cm.Greys_r)
+# plt.show()
+
+
+# ------ e --------
+u,s,v=np.linalg.svd(train_data)
+# print("1",u.shape,"2",s.shape,"3",v.shape)
+for i in range(10):
+    plt.imshow(v[i,:].reshape(50,50), cmap = cm.Greys_r)
+    # plt.show()
+# print(u.T[0].shape)
+# print(v[0].shape)
+# print(s[0].shape)
+# print((s[0]*np.outer(u.T[0], v[0])).shape)
