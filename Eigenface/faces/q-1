@@ -104,16 +104,10 @@ u,s,v=np.linalg.svd(train_data)
 
 
 def project_train(r,X):
-    # if r==0:
-    #     temp=np.matrix(X)*(v[:r,:]).T +  np.zeros((540,1))
-    # else:
     temp=np.matrix(X)*(v[:r,:]).T +  np.zeros((540,r))
     return temp
 
 def project_test(r,X):
-    # if r==0:
-    #     temp=np.matrix(X)*(v[:r,:]).T +  np.zeros((100,1))
-    # else:
     temp=np.matrix(X)*(v[:r,:]).T + np.zeros((100,r))
     return temp
 
