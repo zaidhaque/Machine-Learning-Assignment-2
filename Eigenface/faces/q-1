@@ -2,7 +2,9 @@ import numpy as np
 from scipy import misc
 from matplotlib import pylab as plt
 import matplotlib.cm as cm
-
+import math
+from numpy import linalg as LA
+from sklearn.linear_model import LogisticRegression as lg
 
 #------- a & b --------
 
@@ -14,7 +16,7 @@ for line in open("/Users/Jessie/Documents/Applied Machine Learning/hw2/faces/tra
 train_data, train_labels = np.array(train_data, dtype=float), np.array(train_labels, dtype=int)
 print("train data shape=",train_data.shape,"train label shape=", train_labels.shape)
 # plt.imshow(train_data[10, :].reshape(50,50), cmap = cm.Greys_r)
-# plt.show()
+# plt.showtrain
 
 
 test_labels, test_data = [], []
@@ -33,37 +35,115 @@ print("test data shape=",test_data.shape, "test label shape=",test_labels.shape)
 train_mean=[]
 train_mean=np.mean(train_data,axis=0)
 # print(train_mean.shape)
-plt.imshow(train_mean.reshape(50,50), cmap = cm.Greys_r)
+# plt.imshow(train_mean.reshape(50,50), cmap = cm.Greys_r)
 # plt.show()
 
 # ------ d --------
-mean_sub_train=[]
-for i in range(540):
-    mean_sub_train.append(train_data[i,:]-train_mean)
-mean_subtraction_train=[]
-mean_subtraction_train=np.array(mean_sub_train, dtype=float)
-# print(mean_subtraction_train.shape)
-plt.imshow(mean_subtraction_train[10,:].reshape(50,50), cmap = cm.Greys_r)
-# plt.show()
+# mean_sub_train=[]
+# for i in range(540):
+#     mean_sub_train.append(train_data[i,:]-train_mean)
+# mean_subtraction_train=[]
+# mean_subtraction_train=np.array(mean_sub_train, dtype=float)
+# # print(mean_subtraction_train.shape)
+# plt.imshow(mean_subtraction_train[10,:].reshape(50,50), cmap = cm.Greys_r)
+# # plt.show()
 
 
-mean_sub_test=[]
-for i in range(100):
-    mean_sub_test.append(test_data[i,:]-train_mean)
-mean_subtraction_test=[]
-mean_subtraction_test=np.array(mean_sub_test, dtype=float)
-# print(mean_subtraction_test.shape)
-plt.imshow(mean_subtraction_test[10,:].reshape(50,50), cmap = cm.Greys_r)
-# plt.show()
+# mean_sub_test=[]
+# for i in range(100):
+#     mean_sub_test.append(test_data[i,:]-train_mean)
+# mean_subtraction_test=[]
+# mean_subtraction_test=np.array(mean_sub_test, dtype=float)
+# # print(mean_subtraction_test.shape)
+# plt.imshow(mean_subtraction_test[10,:].reshape(50,50), cmap = cm.Greys_r)
+# # plt.show()
 
 
 # ------ e --------
 u,s,v=np.linalg.svd(train_data)
 # print("1",u.shape,"2",s.shape,"3",v.shape)
-for i in range(10):
-    plt.imshow(v[i,:].reshape(50,50), cmap = cm.Greys_r)
+# for i in range(10):
+    # plt.imshow(v[i,:].reshape(50,50), cmap = cm.Greys_r)
     # plt.show()
 # print(u.T[0].shape)
 # print(v[0].shape)
 # print(s[0].shape)
 # print((s[0]*np.outer(u.T[0], v[0])).shape)
+#
+#
+# # ----- f ------
+# def approx(r,X):
+#     u,s,v=np.linalg.svd(X)
+#     A = np.zeros((len(u), len(v)))
+#     for i in range(r):
+#         A += s[i] * np.outer(u.T[i], v[i])
+#     return A
+#
+# Appro=[]
+# for t in range(200):
+#     Appro.append(approx(t,train_data)-train_data)
+#     if t % 10 == 0:
+#         print(t)
+#
+# Frobenius=[]
+# for j in range(200):
+#     Frobenius.append(math.log(LA.norm(Appro[j])))
+#
+# x_label=[]
+# for i in range(200):
+#     x_label.append(i+1)
+#
+# plt.plot(x_label, Frobenius)
+# plt.show()
+
+
+# -------- g ---------------
+
+
+# print((v[:2,:]).T)
+
+
+def project_train(r,X):
+    # if r==0:
+    #     temp=np.matrix(X)*(v[:r,:]).T +  np.zeros((540,1))
+    # else:
+    temp=np.matrix(X)*(v[:r,:]).T +  np.zeros((540,r))
+    return temp
+
+def project_test(r,X):
+    # if r==0:
+    #     temp=np.matrix(X)*(v[:r,:]).T +  np.zeros((100,1))
+    # else:
+    temp=np.matrix(X)*(v[:r,:]).T + np.zeros((100,r))
+    return temp
+
+
+# -------- h -------
+
+
+#
+# train_rank10=project_train(10,train_data)
+# test_rank10=project_test(10,test_data)
+#
+# clf=lg()
+# print(clf.fit(X=train_rank10,y=train_labels).score(test_rank10,test_labels))
+
+
+
+
+clf=lg()
+score=[]
+for r in range(200):
+    r=r+1
+    score.append(clf.fit(project_train(r,train_data),y=train_labels).score(project_test(r,test_data),test_labels))
+    if r % 10 ==0:
+        print(r)
+
+x_label=[]
+for i in range(200):
+    x_label.append(i+1)
+
+plt.plot(x_label, score)
+plt.show()
+
+
